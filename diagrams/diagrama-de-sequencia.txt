@@ -1,0 +1,16 @@
+sequenceDiagram
+    participant Component as Componente React
+    participant Hook as useUserContext
+    participant Context as UserContext
+    participant Reducer as useReducer
+    
+    Component->>Hook: const {state, dispatch} = useUserContext()
+    Hook->>Context: useContext(UserContext)
+    Context-->>Hook: retorna {state, dispatch}
+    Hook-->>Component: retorna {state, dispatch}
+    
+    Component->>Reducer: dispatch(action)
+    Reducer->>Actions: executa ação baseada no type
+    Actions-->>Reducer: retorna novo estado
+    Reducer->>Context: atualiza estado
+    Context->>Component: re-render com novo estado

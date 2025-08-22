@@ -1,12 +1,24 @@
-import { Button, Icon } from "@rneui/themed";
+import { Button } from "@rneui/themed";
 import React, { useState } from "react";
-import { Text, TextInput, View, StyleSheet } from "react-native";
+import { Text, TextInput, StyleSheet } from "react-native";
+import { ActionType } from "../actionsType";
+import { useUserContext } from "../context/UsersContext";
 
 export default function({route, navigation}) {
     const [user, setUser] = useState(route.params ? route.params : {});
+    const { dispatch } = useUserContext();
+   
+    function handlerUser() {
+        dispatch({
+            type: user.id ? ActionType.UPDATE_USER : ActionType.CREATE_USER,
+            payload: user
+        });
+
+        navigation.navigate('UserList');
+    }
 
     return (
-        <View style={styles.form}>
+        <>
             <Text>Name</Text>
             <TextInput
                 style={styles.input}
@@ -29,8 +41,8 @@ export default function({route, navigation}) {
                 value={user.avatar}
             />
 
-            <Button radius={"sm"} title='Salvar' type="solid" />
-        </View>
+            <Button radius={"sm"} onPress={handlerUser} title='Salvar' type="solid" />
+        </>
     )
 }
 

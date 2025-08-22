@@ -1,21 +1,26 @@
-import { JSX, useContext } from 'react';
+import { JSX } from 'react';
 import { FlatList, Alert} from "react-native";
 import { ListItem,
 Avatar,
 Button } from '@rneui/themed';
-import { User, UserContextType, UserItemProps } from "../types/user.type";
+import { User, UserItemProps } from "../types/user.type";
 import { ScreenPropsNav } from '../types/props-navigation';
-import UserContext from '../context/UsersContext';
+import { useUserContext } from '../context/UsersContext';
+import { ActionType } from '../actionsType';
 
 export default function(props: ScreenPropsNav) {
 
-    const { state } = useContext(UserContext);
+    const { state, dispatch } = useUserContext();
+
     function confirmUserDeletion(user: User) {
         Alert.alert('Excluir Usuario', 'Deseja excluir o Usuario', [
             {
                 text: 'Sim',
                 onPress() {
-                    console.log('delete' + user.id)
+                    dispatch({
+                        type: ActionType.DELETE_USER,
+                        payload: user
+                    })
                 }
             },
             {
@@ -60,7 +65,7 @@ export default function(props: ScreenPropsNav) {
     return (
         <FlatList 
             keyExtractor={(item) => item.id.toString()} // ✅ CORRIGIDO // keyExtractor={MOCK_USERS => MOCK_USERS.id.toString()}
-            data={state.MOCK_USERS}
+            data={state.users}
             renderItem={getUserItem} />
     )
 }
